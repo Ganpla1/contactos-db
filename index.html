@@ -573,13 +573,27 @@
         let currentEditId = null;
 
         // Inicializar la aplicación
-        document.addEventListener('DOMContentLoaded', function() {
-            loadSampleData();
+        document.addEventListener('DOMContentLoaded', function () {
+            loadFromLocalStorage();
+            if (contacts.length === 0) {
+                loadSampleData();
+            }
             updateStats();
             setupEventListeners();
         });
 
-        function setupEventListeners() {
+        function saveToLocalStorage() {
+    localStorage.setItem('contactos', JSON.stringify(contacts));
+}
+
+function loadFromLocalStorage() {
+    const stored = localStorage.getItem('contactos');
+    if (stored) {
+        contacts = JSON.parse(stored);
+    }
+}
+
+function setupEventListeners() {
             const searchInput = document.getElementById('searchInput');
             const searchField = document.getElementById('searchField');
             
@@ -856,7 +870,8 @@
 
             closeModal();
             updateStats();
-            searchContacts(); // Refrescar resultados
+            searchContacts();
+            saveToLocalStorage(); // Guardar cambios
             
             // Mostrar mensaje de éxito
             alert(currentEditId ? 'Contacto actualizado exitosamente.' : 'Contacto agregado exitosamente.');
@@ -866,6 +881,7 @@
             if (confirm('¿Está seguro de que desea eliminar este contacto?')) {
                 contacts = contacts.filter(c => c.id !== id);
                 updateStats();
+                saveToLocalStorage();
                 searchContacts(); // Refrescar resultados
                 alert('Contacto eliminado exitosamente.');
             }
@@ -980,6 +996,7 @@
                     // Agregar contactos válidos
                     contacts = contacts.concat(validContacts);
                     updateStats();
+                    saveToLocalStorage();
                     displayAllContacts();
                     
                     alert(`Se importaron ${validContacts.length} contactos exitosamente.`);
