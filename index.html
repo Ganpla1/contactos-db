@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestión de Contactos</title>
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Base de Contactos - Corte Constitucional</title>
+<style>
         * {
             margin: 0;
             padding: 0;
@@ -13,7 +14,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #a80420 0%, #5e010f 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -114,7 +115,7 @@
 
         .form-control:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #a80420;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
             transform: translateY(-1px);
         }
@@ -132,7 +133,7 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #a80420 0%, #5e010f 100%);
             color: white;
         }
 
@@ -207,7 +208,7 @@
             left: 0;
             width: 4px;
             height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #a80420 0%, #5e010f 100%);
         }
 
         .contact-card:hover {
@@ -356,7 +357,7 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #a80420 0%, #5e010f 100%);
             color: white;
             padding: 20px;
             border-radius: 15px;
@@ -408,166 +409,160 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🏛️ Sistema de Gestión de Contactos</h1>
-            <p>Base de Datos de Contactos Jurídicos - Segura y Profesional</p>
-        </div>
-
-        <div class="main-content">
-            <!-- Estadísticas -->
-            <div class="stats">
-                <div class="stat-card">
-                    <div class="stat-number" id="totalContacts">0</div>
-                    <div class="stat-label">Total Contactos</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="todayUpdates">0</div>
-                    <div class="stat-label">Actualizados Hoy</div>
-                </div>
-            </div>
-
-            <!-- Exportar datos -->
-            <div class="export-section">
-                <button class="btn btn-success" onclick="exportToExcel()">📊 Exportar a Excel</button>
-                <input type="file" id="importFile" accept=".xlsx,.xls,.csv" style="display: none;" onchange="importFromExcel(event)">
-                <button class="btn btn-primary" onclick="document.getElementById('importFile').click()">📂 Importar desde Excel</button>
-            </div>
-
-            <!-- Búsqueda -->
-            <div class="search-section">
-                <h2 class="search-title">🔍 Búsqueda de Contactos</h2>
-                <div class="search-controls">
-                    <div class="form-group">
-                        <label for="searchField">Buscar por:</label>
-                        <select id="searchField" class="form-control">
-                            <option value="nombres">Nombres y Apellidos</option>
-                            <option value="cedula">Cédula</option>
-                            <option value="cargo">Cargo</option>
-                            <option value="entidad">Entidad</option>
-                            <option value="ciudad">Ciudad</option>
-                            <option value="telefono">Teléfono</option>
-                            <option value="correo">Correo electrónico</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="searchInput">Término de búsqueda:</label>
-                        <div class="search-input-container">
-                            <input type="text" id="searchInput" class="form-control" placeholder="Escriba para buscar...">
-                            <div id="suggestions" class="suggestions" style="display: none;"></div>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" onclick="searchContacts()">Buscar</button>
-                </div>
-                <button class="btn btn-success" onclick="showAddModal()">➕ Agregar Nuevo Contacto</button>
-            </div>
-
-            <!-- Resultados -->
-            <div class="results-section">
-                <h2>📋 Resultados</h2>
-                <div id="results"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para agregar/editar contacto -->
-    <div id="contactModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Agregar Contacto</h2>
-                <button class="close" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="contactForm">
-                    <input type="hidden" id="contactId">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="categoria">Categoría:</label>
-                            <input type="text" id="categoria" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="entidad">Entidad:</label>
-                            <input type="text" id="entidad" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="cargo">Cargo: *</label>
-                            <input type="text" id="cargo" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="cargo2">Cargo 2:</label>
-                            <input type="text" id="cargo2" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="cedula">Cédula:</label>
-                            <input type="text" id="cedula" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="nombres">Nombres y Apellidos: *</label>
-                            <input type="text" id="nombres" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="telefono">Teléfono:</label>
-                            <input type="text" id="telefono" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="extension">Extensión:</label>
-                            <input type="text" id="extension" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="correo">Correo electrónico:</label>
-                            <input type="email" id="correo" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="asistente">Asistente:</label>
-                            <input type="text" id="asistente" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="telefono2">Teléfono 2:</label>
-                            <input type="text" id="telefono2" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="correo2">Correo 2:</label>
-                            <input type="email" id="correo2" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="ciudad">Ciudad:</label>
-                            <input type="text" id="ciudad" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="departamento">Departamento:</label>
-                            <input type="text" id="departamento" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="encargado">Encargado de la gestión:</label>
-                            <input type="text" id="encargado" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="notas">Notas:</label>
-                            <textarea id="notas" class="form-control" rows="3"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="panelistas">Panelistas:</label>
-                            <input type="text" id="panelistas" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="estado">Estado:</label>
-                            <select id="estado" class="form-control">
-                                <option value="Activo">Activo</option>
-                                <option value="Inactivo">Inactivo</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="margin-top: 30px; text-align: center;">
-                        <button type="submit" class="btn btn-success">💾 Guardar</button>
-                        <button type="button" class="btn btn-danger" onclick="closeModal()" style="margin-left: 10px;">❌ Cancelar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script>
+<div class="container">
+<div class="header"><img alt="Logo Corte Constitucional" src="https://etbcsj-my.sharepoint.com/:i:/g/personal/gabrielplazas_corteconstitucional_gov_co/EeDx9uBcqLFGgEDltL_ihhMBs6YwTWtpjMZUIlVifONkFw?e=zazLpJ" style="max-height: 80px; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;"/>
+<h1>🏛️ Corte Constitucional - Presidencia</h1>
+<p>Base de datos Contactos - Uso Interno</p>
+</div>
+<div class="main-content">
+<!-- Estadísticas -->
+<div class="stats">
+<div class="stat-card">
+<div class="stat-number" id="totalContacts">0</div>
+<div class="stat-label">Total Contactos</div>
+</div>
+<div class="stat-card">
+<div class="stat-number" id="todayUpdates">0</div>
+<div class="stat-label">Actualizados Hoy</div>
+</div>
+</div>
+<!-- Exportar datos -->
+<div class="export-section">
+<button class="btn btn-success" onclick="exportToExcel()">📊 Exportar a Excel</button>
+<input accept=".xlsx,.xls,.csv" id="importFile" onchange="importFromExcel(event)" style="display: none;" type="file"/>
+<button class="btn btn-primary" onclick="document.getElementById('importFile').click()">📂 Importar desde Excel</button>
+<button class="btn btn-primary" onclick="syncToOneDrive()">🔄 Sincronizar en OneDrive</button></div>
+<!-- Búsqueda -->
+<div class="search-section">
+<h2 class="search-title">🔍 Búsqueda de Contactos</h2>
+<div class="search-controls">
+<div class="form-group">
+<label for="searchField">Buscar por:</label>
+<select class="form-control" id="searchField">
+<option value="nombres">Nombres y Apellidos</option>
+<option value="cedula">Cédula</option>
+<option value="cargo">Cargo</option>
+<option value="entidad">Entidad</option>
+<option value="ciudad">Ciudad</option>
+<option value="telefono">Teléfono</option>
+<option value="correo">Correo electrónico</option>
+</select>
+</div>
+<div class="form-group">
+<label for="searchInput">Término de búsqueda:</label>
+<div class="search-input-container">
+<input class="form-control" id="searchInput" placeholder="Escriba para buscar..." type="text"/>
+<div class="suggestions" id="suggestions" style="display: none;"></div>
+</div>
+</div>
+<button class="btn btn-primary" onclick="searchContacts()">Buscar</button>
+</div>
+<button class="btn btn-success" onclick="showAddModal()">➕ Agregar Nuevo Contacto</button>
+</div>
+<!-- Resultados -->
+<div class="results-section">
+<h2>📋 Resultados</h2>
+<div id="results"></div>
+</div>
+</div>
+</div>
+<!-- Modal para agregar/editar contacto -->
+<div class="modal" id="contactModal">
+<div class="modal-content">
+<div class="modal-header">
+<h2 id="modalTitle">Agregar Contacto</h2>
+<button class="close" onclick="closeModal()">×</button>
+</div>
+<div class="modal-body">
+<form id="contactForm">
+<input id="contactId" type="hidden"/>
+<div class="form-grid">
+<div class="form-group">
+<label for="categoria">Categoría:</label>
+<input class="form-control" id="categoria" type="text"/>
+</div>
+<div class="form-group">
+<label for="entidad">Entidad:</label>
+<input class="form-control" id="entidad" type="text"/>
+</div>
+<div class="form-group">
+<label for="cargo">Cargo: *</label>
+<input class="form-control" id="cargo" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="cargo2">Cargo 2:</label>
+<input class="form-control" id="cargo2" type="text"/>
+</div>
+<div class="form-group">
+<label for="cedula">Cédula:</label>
+<input class="form-control" id="cedula" type="text"/>
+</div>
+<div class="form-group">
+<label for="nombres">Nombres y Apellidos: *</label>
+<input class="form-control" id="nombres" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="telefono">Teléfono:</label>
+<input class="form-control" id="telefono" type="text"/>
+</div>
+<div class="form-group">
+<label for="extension">Extensión:</label>
+<input class="form-control" id="extension" type="text"/>
+</div>
+<div class="form-group">
+<label for="correo">Correo electrónico:</label>
+<input class="form-control" id="correo" type="email"/>
+</div>
+<div class="form-group">
+<label for="asistente">Asistente:</label>
+<input class="form-control" id="asistente" type="text"/>
+</div>
+<div class="form-group">
+<label for="telefono2">Teléfono 2:</label>
+<input class="form-control" id="telefono2" type="text"/>
+</div>
+<div class="form-group">
+<label for="correo2">Correo 2:</label>
+<input class="form-control" id="correo2" type="email"/>
+</div>
+<div class="form-group">
+<label for="ciudad">Ciudad:</label>
+<input class="form-control" id="ciudad" type="text"/>
+</div>
+<div class="form-group">
+<label for="departamento">Departamento:</label>
+<input class="form-control" id="departamento" type="text"/>
+</div>
+<div class="form-group">
+<label for="encargado">Encargado de la gestión:</label>
+<input class="form-control" id="encargado" type="text"/>
+</div>
+<div class="form-group">
+<label for="notas">Notas:</label>
+<textarea class="form-control" id="notas" rows="3"></textarea>
+</div>
+<div class="form-group">
+<label for="panelistas">Panelistas:</label>
+<input class="form-control" id="panelistas" type="text"/>
+</div>
+<div class="form-group">
+<label for="estado">Estado:</label>
+<select class="form-control" id="estado">
+<option value="Activo">Activo</option>
+<option value="Inactivo">Inactivo</option>
+</select>
+</div>
+</div>
+<div style="margin-top: 30px; text-align: center;">
+<button class="btn btn-success" type="submit">💾 Guardar</button>
+<button class="btn btn-danger" onclick="closeModal()" style="margin-left: 10px;" type="button">❌ Cancelar</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
         // Base de datos en memoria
         let contacts = [];
         let currentEditId = null;
@@ -1024,6 +1019,10 @@ function setupEventListeners() {
         window.onload = function() {
             displayAllContacts();
         };
-    </script>
+    </script><script>
+function syncToOneDrive() {
+    alert('Esta función debería subir el archivo a la carpeta de OneDrive automáticamente.\n\nPor ahora, súbelo manualmente a:\nhttps://etbcsj-my.sharepoint.com/:f:/g/personal/gabrielplazas_corteconstitucional_gov_co/EngU-e_E9zdGlaHT7xzKstABdLT0gd8flMWNEp5WTBYnJw?e=DAEGVd');
+}
+</script>
 </body>
 </html>
